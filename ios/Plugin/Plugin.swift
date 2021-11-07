@@ -343,6 +343,7 @@ public class BarcodeScanner: CAPPlugin, AVCaptureMetadataOutputObjectsDelegate {
         }
 
         let found = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+
         if (targetedFormats.contains(found.type)) {
             var jsObject = PluginCallResultData()
 
@@ -352,6 +353,11 @@ public class BarcodeScanner: CAPPlugin, AVCaptureMetadataOutputObjectsDelegate {
             } else {
                 jsObject["hasContent"] = false
             }
+
+            // Also expose binary data
+            let tempObject = found.value(forKeyPath: "_internal.basicDescriptor")! as! [String:Any]
+            let binaryData = tempObject["BarcodeRawData"] as? Data
+            jsObject["binaryData"] = binaryData
 
             if (self.savedCall != nil) {
                 savedCall?.resolve(jsObject)

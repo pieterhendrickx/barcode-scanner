@@ -284,6 +284,8 @@ public class BarcodeScanner extends Plugin implements BarcodeCallback {
             jsObject.put("hasContent", false);
         }
 
+        jsObject.put("binaryData", barcodeResult.getRawBytes());
+
         if (getSavedCall() != null) {
             getSavedCall().resolve(jsObject);
         }
