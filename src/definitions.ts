@@ -123,7 +123,7 @@ export interface ScanResult {
    *
    * @since 1.0.0
    */
-  binaryData: any;
+  binaryData: number[];
 }
 
 export interface CheckPermissionOptions {

@@ -284,6 +284,10 @@ public class BarcodeScanner extends Plugin implements BarcodeCallback {
             jsObject.put("hasContent", false);
         }
 
+        // RawBytes heeft nog prefixes en padding op het einde.
+        // Voor de rest komt daar dezelfde code uit als getText()
+        // tenminste voor niet gecomprimeerde codes
+
         byte[] rawBytes = barcodeResult.getRawBytes();
         int[] integers = new int[rawBytes.length];
 
@@ -292,7 +296,6 @@ public class BarcodeScanner extends Plugin implements BarcodeCallback {
         }
 
         jsObject.put("binaryData", JSArray.from(integers));
-        jsObject.put("binaryDataLength", integers.length);
 
         if (getSavedCall() != null) {
             getSavedCall().resolve(jsObject);
