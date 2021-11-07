@@ -118,6 +118,12 @@ export interface ScanResult {
    * @since 1.0.0
    */
   content?: string;
+  /**
+   * This holds the raw binary content of the barcode.
+   *
+   * @since 1.0.0
+   */
+  binaryData: any;
 }
 
 export interface CheckPermissionOptions {
