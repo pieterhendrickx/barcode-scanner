@@ -356,8 +356,8 @@ public class BarcodeScanner: CAPPlugin, AVCaptureMetadataOutputObjectsDelegate {
 
             // Also expose binary data
             let tempObject = found.value(forKeyPath: "_internal.basicDescriptor")! as! [String:Any]
-            let binaryData = tempObject["BarcodeRawData"] as? Data
-            jsObject["binaryData"] = binaryData
+            let binaryData = tempObject["BarcodeRawData"] as? NSData
+            jsObject["binaryData"] = [UInt8](binaryData)
 
             if (self.savedCall != nil) {
                 savedCall?.resolve(jsObject)
