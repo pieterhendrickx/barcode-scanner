@@ -284,18 +284,19 @@ public class BarcodeScanner extends Plugin implements BarcodeCallback {
             jsObject.put("hasContent", false);
         }
 
-        // RawBytes heeft nog prefixes en padding op het einde.
-        // Voor de rest komt daar dezelfde code uit als getText()
-        // tenminste voor niet gecomprimeerde codes
+        try {
+            byte[] rawBytes = barcodeResult.getRawBytes();
+            int[] integers = new int[rawBytes.length];
 
-        byte[] rawBytes = barcodeResult.getRawBytes();
-        int[] integers = new int[rawBytes.length];
+            for (int i = 0; i < rawBytes.length; i++) {
+                integers[i] = Byte.toUnsignedInt(rawBytes[i]);
+            }
 
-        for (int i = 0; i < rawBytes.length; i++) {
-            integers[i] = Byte.toUnsignedInt(rawBytes[i]);
+            jsObject.put("binaryData", JSArray.from(integers));
+            jsObject.put("hasBinaryData", true);
+        } catch (Exception e) {
+            jsObject.put("hasBinaryData", false);
         }
-
-        jsObject.put("binaryData", JSArray.from(integers));
 
         if (getSavedCall() != null) {
             getSavedCall().resolve(jsObject);
