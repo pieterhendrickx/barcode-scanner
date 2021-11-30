@@ -118,20 +118,6 @@ export interface ScanResult {
    * @since 1.0.0
    */
   content?: string;
-
-  /**
-   * Indicates if the binaryContent property holds the raw binary content of the barcode.
-   *
-   * @since 2.2.0
-   */
-  hasBinaryContent: boolean;
-
-  /**
-   * This holds the raw binary content of the barcode.
-   *
-   * @since 2.2.0
-   */
-  binaryContent?: number[];
 }
 
 export interface CheckPermissionOptions {
