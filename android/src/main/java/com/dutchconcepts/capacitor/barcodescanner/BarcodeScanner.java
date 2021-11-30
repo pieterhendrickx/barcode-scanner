@@ -292,10 +292,10 @@ public class BarcodeScanner extends Plugin implements BarcodeCallback {
                 integers[i] = Byte.toUnsignedInt(rawBytes[i]);
             }
 
-            jsObject.put("binaryData", JSArray.from(integers));
-            jsObject.put("hasBinaryData", true);
+            jsObject.put("binaryContent", JSArray.from(integers));
+            jsObject.put("hasBinaryContent", true);
         } catch (Exception e) {
-            jsObject.put("hasBinaryData", false);
+            jsObject.put("hasBinaryContent", false);
         }
 
         if (getSavedCall() != null) {
