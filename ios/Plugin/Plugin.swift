@@ -354,15 +354,25 @@ public class BarcodeScanner: CAPPlugin, AVCaptureMetadataOutputObjectsDelegate {
                 jsObject["hasContent"] = false
             }
 
-            // // Also expose binary content
-            let rawData = found.valueForKeyPath("_internal.basicDescriptor")!["BarcodeRawData"] as? Data
-
-            if (rawData != nil) {
-                jsObject["binaryContent"] = [UInt8](binaryContent!)
-                jsObject["hasBinaryContent"] = true
+            // Also expose binary content
+            // https://stackoverflow.com/questions/46820518/swift-4-avmetadataobject-stringvalue-has-incomplete-information-when-reading-p
+            if let basic_descriptor = found.value(forKeyPath: "_internal.basicDescriptor") as? NSObject {
+                if let barcodeRawData = basic_descriptor.value(forKeyPath: "BarcodeRawData") as? NSData {
+                    let barcode_raw_data_length = barcodeRawData.length
+                    let memory_layout = MemoryLayout<UInt8>.size
+                    let count = barcode_raw_data_length / memory_layout
+                    var array = [UInt8](repeating: 0, count: count)
+                    barcodeRawData.getBytes(&array, length:count * memory_layout)
+    
+                    jsObject["binaryContent"] = array
+                    jsObject["hasBinaryContent"] = true
+                } else {
+                    jsObject["hasBinaryContent"] = false
+                }
             } else {
-                 jsObject["hasBinaryContent"] = false
+                jsObject["hasBinaryContent"] = false
             }
+
 
             if (self.savedCall != nil) {
                 savedCall?.resolve(jsObject)
