@@ -103,21 +103,10 @@ export interface StopScanOptions {
 }
 
 export interface ScanResult {
-  /**
-   * This indicates whether or not the scan resulted in readable content.
-   * When stopping the scan with `resolveScan` set to `true`, for example,
-   * this parameter is set to `false`, because no actual content was scanned.
-   *
-   * @since 1.0.0
-   */
   hasContent: boolean;
-
-  /**
-   * This holds the content of the barcode if available.
-   *
-   * @since 1.0.0
-   */
+  hasBinaryContent: boolean;
   content?: string;
+  binaryContent?: number[];
 }
 
 export interface CheckPermissionOptions {

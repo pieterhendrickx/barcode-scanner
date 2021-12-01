@@ -355,20 +355,14 @@ public class BarcodeScanner: CAPPlugin, AVCaptureMetadataOutputObjectsDelegate {
             }
 
             // Also expose binary content
-            // let basicDescriptor = found.value(forKeyPath: "_internal.basicDescriptor")
-            
-            // if (basicDescriptor == nil) {
-            //     jsObject["hasBinaryContent"] = false
-            // } else {
-            //     let descriptor = basicDescriptor! as! [String:Any]
-            //     let binaryContent = descriptor["BarcodeRawData"] as? NSData
-            //     if (binaryContent != nil) {
-            //         jsObject["binaryContent"] = [UInt8](binaryContent!)
-            //         jsObject["hasBinaryContent"] = true
-            //     } else {
-            //         jsObject["hasBinaryContent"] = false
-            //     }
-            // }
+            let basicDescriptor = found.value(forKeyPath: "_internal.basicDescriptor")! as! [String:Any]
+            let binaryContent = basicDescriptor["BarcodeRawData"] as? NSData
+            if (binaryContent != nil) {
+                jsObject["binaryContent"] = [UInt8](binaryContent!)
+                jsObject["hasBinaryContent"] = true
+            } else {
+                jsObject["hasBinaryContent"] = false
+            }
 
             if (self.savedCall != nil) {
                 savedCall?.resolve(jsObject)
