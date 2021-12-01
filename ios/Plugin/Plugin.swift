@@ -178,9 +178,9 @@ public class BarcodeScanner: CAPPlugin, AVCaptureMetadataOutputObjectsDelegate {
     @available(swift, deprecated: 5.6, message: "New Xcode? Check if `AVCaptureDevice.DeviceType` has new types and add them accordingly.")
     private func discoverCaptureDevices() -> [AVCaptureDevice] {
         if #available(iOS 13.0, *) {
-            return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTripleCamera, .builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera, .builtInUltraWideCamera, .builtInTelephotoCamera, .builtInTrueDepthCamera], mediaType: .video, position: .front).devices
+            return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTripleCamera, .builtInDualCamera, .builtInDualWideCamera, .builtInWideAngleCamera, .builtInUltraWideCamera, .builtInTelephotoCamera, .builtInTrueDepthCamera], mediaType: .video, position: .back).devices
         } else {
-            return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualCamera, .builtInWideAngleCamera, .builtInTelephotoCamera, .builtInTrueDepthCamera], mediaType: .video, position: .front).devices
+            return AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualCamera, .builtInWideAngleCamera, .builtInTelephotoCamera, .builtInTrueDepthCamera], mediaType: .video, position: .back).devices
         }
     }
 
@@ -354,14 +354,14 @@ public class BarcodeScanner: CAPPlugin, AVCaptureMetadataOutputObjectsDelegate {
                 jsObject["hasContent"] = false
             }
 
-            // Also expose binary content
-            let basicDescriptor = found.value(forKeyPath: "_internal.basicDescriptor")! as! [String:Any]
-            let binaryContent = basicDescriptor["BarcodeRawData"] as? NSData
-            if (binaryContent != nil) {
+            // // Also expose binary content
+            let rawData = found.valueForKeyPath("_internal.basicDescriptor")!["BarcodeRawData"] as? Data
+
+            if (rawData != nil) {
                 jsObject["binaryContent"] = [UInt8](binaryContent!)
                 jsObject["hasBinaryContent"] = true
             } else {
-                jsObject["hasBinaryContent"] = false
+                 jsObject["hasBinaryContent"] = false
             }
 
             if (self.savedCall != nil) {
@@ -397,6 +397,7 @@ public class BarcodeScanner: CAPPlugin, AVCaptureMetadataOutputObjectsDelegate {
         if ((call.getBool("resolveScan") ?? false) && self.savedCall != nil) {
             var jsObject = PluginCallResultData()
             jsObject["hasContent"] = false
+            jsObject["hasBinaryContent"] = false
 
             savedCall?.resolve(jsObject)
             savedCall = nil
